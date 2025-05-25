@@ -1,4 +1,3 @@
-
 let dict = [];
 
 fetch('conlang_dict.json')
@@ -33,6 +32,7 @@ function displayAllWords(data) {
   });
 
   const usedAsChild = new Set(data.filter(w => w.root).map(w => w.root));
+  const shown = new Set(); // To avoid double displaying
 
   for (let cat in grouped) {
     const section = document.createElement("div");
@@ -43,12 +43,12 @@ function displayAllWords(data) {
       const isRoot = usedAsChild.has(word.conlang);
       const hasParent = word.root !== null;
 
-      if (isRoot) {
-        // Show parent and children
+      if (isRoot && !shown.has(word.conlang)) {
         const line = document.createElement("div");
         line.className = "word";
         line.textContent = `${capitalize(word.english)} - ${word.conlang}`;
         section.appendChild(line);
+        shown.add(word.conlang);
 
         const children = data.filter(w => w.root === word.conlang);
         children.forEach(child => {
@@ -56,13 +56,14 @@ function displayAllWords(data) {
           rootLine.className = "root";
           rootLine.textContent = `→ ${capitalize(child.english)} - ${child.conlang}`;
           section.appendChild(rootLine);
+          shown.add(child.conlang);
         });
-      } else if (!hasParent) {
-        // Show only standalone words
+      } else if (!hasParent && !shown.has(word.conlang)) {
         const line = document.createElement("div");
         line.className = "word";
         line.textContent = `${capitalize(word.english)} - ${word.conlang}`;
         section.appendChild(line);
+        shown.add(word.conlang);
       }
     });
 
@@ -71,7 +72,95 @@ function displayAllWords(data) {
 }
 
 function filterWords() {
-  const term = document.getElementById("search").value.toLowerCase();
+  const term = document.getElementById("search").value.trim().toLowerCase();
+  const filtered = dict.filter(w =>
+    w.english.includes(term) || w.conlang.includes(term)
+  );
+  displayAllWords(filtered);
+}
+
+function viewAll() {
+  document.getElementById("search").value = "";
+  displayAllWords(dict);
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}let dict = [];
+
+fetch('conlang_dict.json')
+  .then(res => {
+    if (!res.ok) throw new Error("Failed to load JSON");
+    return res.json();
+  })
+  .then(data => {
+    dict = data.map(entry => ({
+      ...entry,
+      english: entry.english.toLowerCase(),
+      conlang: entry.conlang.toLowerCase(),
+      category: entry.category.toLowerCase(),
+      root: entry.root ? entry.root.toLowerCase() : null
+    }));
+    displayAllWords(dict);
+  })
+  .catch(err => {
+    document.getElementById("dictionary").innerHTML = `<p style="color:red;">Error loading dictionary: ${err.message}</p>`;
+  });
+
+function displayAllWords(data) {
+  document.getElementById("wordCount").textContent = `Total words: ${data.length}`;
+  const output = document.getElementById("dictionary");
+  output.innerHTML = "";
+
+  const grouped = {};
+  data.forEach(entry => {
+    const cat = entry.category;
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(entry);
+  });
+
+  const usedAsChild = new Set(data.filter(w => w.root).map(w => w.root));
+  const shown = new Set(); // To avoid double displaying
+
+  for (let cat in grouped) {
+    const section = document.createElement("div");
+    section.className = "category";
+    section.innerHTML = `<h2>${capitalize(cat)}</h2>`;
+
+    grouped[cat].forEach(word => {
+      const isRoot = usedAsChild.has(word.conlang);
+      const hasParent = word.root !== null;
+
+      if (isRoot && !shown.has(word.conlang)) {
+        const line = document.createElement("div");
+        line.className = "word";
+        line.textContent = `${capitalize(word.english)} - ${word.conlang}`;
+        section.appendChild(line);
+        shown.add(word.conlang);
+
+        const children = data.filter(w => w.root === word.conlang);
+        children.forEach(child => {
+          const rootLine = document.createElement("div");
+          rootLine.className = "root";
+          rootLine.textContent = `→ ${capitalize(child.english)} - ${child.conlang}`;
+          section.appendChild(rootLine);
+          shown.add(child.conlang);
+        });
+      } else if (!hasParent && !shown.has(word.conlang)) {
+        const line = document.createElement("div");
+        line.className = "word";
+        line.textContent = `${capitalize(word.english)} - ${word.conlang}`;
+        section.appendChild(line);
+        shown.add(word.conlang);
+      }
+    });
+
+    output.appendChild(section);
+  }
+}
+
+function filterWords() {
+  const term = document.getElementById("search").value.trim().toLowerCase();
   const filtered = dict.filter(w =>
     w.english.includes(term) || w.conlang.includes(term)
   );
