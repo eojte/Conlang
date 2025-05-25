@@ -1,361 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Conlang Admin Panel</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-    }
-
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-
-    input, select, button {
-      padding: 12px;
-      margin: 8px 0;
-      width: 100%;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    #log {
-      width: 100%;
-      height: 200px;
-      margin-top: 15px;
-      padding: 10px;
-      font-family: monospace;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    hr {
-      margin: 30px 0 20px;
-      border: none;
-      border-top: 1px solid #ccc;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>Conlang Admin Panel</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    max-width: 600px;
+    margin: 30px auto;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px #ccc;
+  }
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+  input, select, button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  #log {
+    width: 100%;
+    height: 180px;
+    font-family: monospace;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
+</style>
 </head>
 <body>
-  <h1>Conlang Admin Panel</h1>
 
-  <input id="english" placeholder="English word" />
-  <input id="conlang" placeholder="Conlang word" />
-  <select id="category">
-    <option value="noun">Noun</option>
-    <option value="verb">Verb</option>
-    <option value="adjective">Adjective</option>
-    <option value="other">Other</option>
-  </select>
-  <input id="root" placeholder="Root word (optional)" />
-  <button onclick="addOrUpdate()">Add / Update Word</button>
-  <button onclick="saveToGitHub()">Save to GitHub</button>
+<h1>Conlang Admin Panel</h1>
 
-  <hr />
+<input id="english" placeholder="English word" />
+<input id="conlang" placeholder="Conlang word" />
+<input id="category" placeholder="Type (e.g. noun, verb)" />
+<input id="root" placeholder="Root word (optional)" />
 
-  <input id="searchBox" placeholder="Search English or Conlang..." />
-  <button onclick="searchWord()">Search Word</button>
+<select id="action">
+  <option value="add">Add</option>
+  <option value="edit">Edit</option>
+  <option value="delete">Delete</option>
+  <option value="search">Search</option>
+</select>
 
-  <textarea id="log" readonly placeholder="Log will appear here..."></textarea>
+<button onclick="performAction()">Perform Action</button>
 
-  <script>
-    const repo = "eojte/Conlang"; // Your repo
-    const filePath = "conlang_dict.json";
-    const token = "YOUR_TOKEN_HERE"; // Replace this with your GitHub token
+<div id="log" readonly></div>
 
-    let dictionary = [];
-    let fileSha = "";
+<script>
+  const repo = "eojte/Conlang"; // Your GitHub repo
+  const filePath = "conlang_dict.json";
+  const token = "YOUR_TOKEN_HERE"; // Replace with your GitHub token
 
-    async function loadData() {
+  let dictionary = [];
+  let fileSha = "";
+
+  async function loadData() {
+    try {
       const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`);
+      if (!res.ok) throw new Error('Failed to fetch dictionary');
       const data = await res.json();
       fileSha = data.sha;
       const content = atob(data.content);
       dictionary = JSON.parse(content);
-      log(`Loaded ${dictionary.length} words from GitHub.`);
+      log(`Loaded ${dictionary.length} words.`);
+    } catch (e) {
+      log("Error loading dictionary: " + e.message);
     }
+  }
 
-    function log(msg) {
-      const logBox = document.getElementById("log");
-      logBox.value += msg + "\n";
-      logBox.scrollTop = logBox.scrollHeight;
-    }
+  function log(msg) {
+    const logBox = document.getElementById("log");
+    logBox.textContent += msg + "\n";
+    logBox.scrollTop = logBox.scrollHeight;
+  }
 
-    function addOrUpdate() {
-      const english = document.getElementById("english").value.trim().toLowerCase();
-      const conlang = document.getElementById("conlang").value.trim().toLowerCase();
-      const category = document.getElementById("category").value;
-      const root = document.getElementById("root").value.trim().toLowerCase() || null;
+  async function saveData() {
+    const content = btoa(JSON.stringify(dictionary, null, 2));
+    const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `token ${token}`
+      },
+      body: JSON.stringify({
+        message: "Update dictionary via admin panel",
+        content,
+        sha: fileSha
+      })
+    });
 
-      if (!english || !conlang) {
-        log("Both English and Conlang fields are required.");
-        return;
-      }
-
-      const existing = dictionary.find(w => w.english === english || w.conlang === conlang);
-
-      if (existing) {
-        const confirmReplace = confirm(`"${english}" already exists. Replace it?`);
-        if (!confirmReplace) {
-          log("Cancelled.");
-          return;
-        }
-        existing.english = english;
-        existing.conlang = conlang;
-        existing.category = category;
-        existing.root = root;
-        log(`Updated: ${english} - ${conlang}`);
-      } else {
-        dictionary.push({ english, conlang, category, root });
-        log(`Added: ${english} - ${conlang}`);
-      }
-    }
-
-    async function saveToGitHub() {
-      const content = btoa(JSON.stringify(dictionary, null, 2));
-      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `token ${token}`
-        },
-        body: JSON.stringify({
-          message: "Update conlang_dict.json via admin panel",
-          content,
-          sha: fileSha
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        fileSha = data.content.sha;
-        log("Saved successfully to GitHub.");
-      } else {
-        const err = await res.json();
-        log("Error saving: " + (err.message || "Unknown error."));
-      }
-    }
-
-    function searchWord() {
-      const term = document.getElementById("searchBox").value.trim().toLowerCase();
-      const results = dictionary.filter(w =>
-        w.english.includes(term) || w.conlang.includes(term)
-      );
-
-      if (results.length === 0) {
-        log(`No matches found for "${term}".`);
-      } else {
-        log(`Results for "${term}":`);
-        results.forEach(w => {
-          log(`• ${w.english} - ${w.conlang} [${w.category}]${w.root ? " (root: " + w.root + ")" : ""}`);
-        });
-      }
-    }
-
-    loadData();
-  </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Conlang Admin Panel</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-    }
-
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-
-    input, select, button {
-      padding: 12px;
-      margin: 8px 0;
-      width: 100%;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    #log {
-      width: 100%;
-      height: 200px;
-      margin-top: 15px;
-      padding: 10px;
-      font-family: monospace;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    hr {
-      margin: 30px 0 20px;
-      border: none;
-      border-top: 1px solid #ccc;
-    }
-  </style>
-</head>
-<body>
-  <h1>Conlang Admin Panel</h1>
-
-  <input id="english" placeholder="English word" />
-  <input id="conlang" placeholder="Conlang word" />
-  <select id="category">
-    <option value="noun">Noun</option>
-    <option value="verb">Verb</option>
-    <option value="adjective">Adjective</option>
-    <option value="other">Other</option>
-  </select>
-  <input id="root" placeholder="Root word (optional)" />
-  <button onclick="addOrUpdate()">Add / Update Word</button>
-  <button onclick="saveToGitHub()">Save to GitHub</button>
-
-  <hr />
-
-  <input id="searchBox" placeholder="Search English or Conlang..." />
-  <button onclick="searchWord()">Search Word</button>
-
-  <textarea id="log" readonly placeholder="Log will appear here..."></textarea>
-
-  <script>
-    const repo = "eojte/Conlang"; // Your repo
-    const filePath = "conlang_dict.json";
-    const token = "YOUR_TOKEN_HERE"; // Replace this with your GitHub token
-
-    let dictionary = [];
-    let fileSha = "";
-
-    async function loadData() {
-      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`);
+    if (res.ok) {
       const data = await res.json();
-      fileSha = data.sha;
-      const content = atob(data.content);
-      dictionary = JSON.parse(content);
-      log(`Loaded ${dictionary.length} words from GitHub.`);
+      fileSha = data.content.sha;
+      log("Saved changes to GitHub.");
+    } else {
+      const err = await res.json();
+      log("Error saving: " + (err.message || "Unknown error"));
     }
+  }
 
-    function log(msg) {
-      const logBox = document.getElementById("log");
-      logBox.value += msg + "\n";
-      logBox.scrollTop = logBox.scrollHeight;
-    }
+  async function performAction() {
+    const english = document.getElementById("english").value.trim().toLowerCase();
+    const conlang = document.getElementById("conlang").value.trim().toLowerCase();
+    const category = document.getElementById("category").value.trim().toLowerCase();
+    const rootVal = document.getElementById("root").value.trim().toLowerCase() || null;
+    const action = document.getElementById("action").value;
 
-    function addOrUpdate() {
-      const english = document.getElementById("english").value.trim().toLowerCase();
-      const conlang = document.getElementById("conlang").value.trim().toLowerCase();
-      const category = document.getElementById("category").value;
-      const root = document.getElementById("root").value.trim().toLowerCase() || null;
-
-      if (!english || !conlang) {
-        log("Both English and Conlang fields are required.");
+    if (["add", "edit"].includes(action)) {
+      if (!english || !conlang || !category) {
+        log("Please fill English, Conlang, and Type fields.");
         return;
       }
+    }
 
-      const existing = dictionary.find(w => w.english === english || w.conlang === conlang);
-
-      if (existing) {
-        const confirmReplace = confirm(`"${english}" already exists. Replace it?`);
-        if (!confirmReplace) {
-          log("Cancelled.");
-          return;
+    switch(action) {
+      case "add":
+        if (dictionary.some(w => w.english === english || w.conlang === conlang)) {
+          log(`Word "${english}" or "${conlang}" already exists. Use Edit to modify.`);
+          break;
         }
-        existing.english = english;
-        existing.conlang = conlang;
-        existing.category = category;
-        existing.root = root;
-        log(`Updated: ${english} - ${conlang}`);
-      } else {
-        dictionary.push({ english, conlang, category, root });
-        log(`Added: ${english} - ${conlang}`);
-      }
+        dictionary.push({english, conlang, category, root: rootVal});
+        log(`Added word: ${english} - ${conlang} (${category})`);
+        await saveData();
+        break;
+
+      case "edit":
+        const toEdit = dictionary.find(w => w.english === english || w.conlang === conlang);
+        if (!toEdit) {
+          log(`Word "${english}" not found for editing.`);
+          break;
+        }
+        toEdit.english = english;
+        toEdit.conlang = conlang;
+        toEdit.category = category;
+        toEdit.root = rootVal;
+        log(`Edited word: ${english} - ${conlang} (${category})`);
+        await saveData();
+        break;
+
+      case "delete":
+        if (!english && !conlang) {
+          log("Provide English or Conlang word to delete.");
+          break;
+        }
+        const beforeLen = dictionary.length;
+        dictionary = dictionary.filter(w => !(w.english === english || w.conlang === conlang));
+        if (dictionary.length === beforeLen) {
+          log("No matching word found to delete.");
+        } else {
+          log(`Deleted word "${english || conlang}".`);
+          await saveData();
+        }
+        break;
+
+      case "search":
+        if (!english && !conlang && !category) {
+          log("Please enter English, Conlang or Type to search.");
+          break;
+        }
+        const results = dictionary.filter(w => 
+          (english && w.english.includes(english)) ||
+          (conlang && w.conlang.includes(conlang)) ||
+          (category && w.category.includes(category))
+        );
+        if (results.length === 0) {
+          log("No matches found.");
+        } else {
+          log(`Found ${results.length} result(s):`);
+          results.forEach(w => {
+            log(`• ${w.english} - ${w.conlang} [${w.category}]${w.root ? " (root: "+w.root+")" : ""}`);
+          });
+        }
+        break;
+
+      default:
+        log("Invalid action.");
     }
+  }
 
-    async function saveToGitHub() {
-      const content = btoa(JSON.stringify(dictionary, null, 2));
-      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `token ${token}`
-        },
-        body: JSON.stringify({
-          message: "Update conlang_dict.json via admin panel",
-          content,
-          sha: fileSha
-        })
-      });
+  loadData();
+</script>
 
-      if (res.ok) {
-        const data = await res.json();
-        fileSha = data.content.sha;
-        log("Saved successfully to GitHub.");
-      } else {
-        const err = await res.json();
-        log("Error saving: " + (err.message || "Unknown error."));
-      }
-    }
-
-    function searchWord() {
-      const term = document.getElementById("searchBox").value.trim().toLowerCase();
-      const results = dictionary.filter(w =>
-        w.english.includes(term) || w.conlang.includes(term)
-      );
-
-      if (results.length === 0) {
-        log(`No matches found for "${term}".`);
-      } else {
-        log(`Results for "${term}":`);
-        results.forEach(w => {
-          log(`• ${w.english} - ${w.conlang} [${w.category}]${w.root ? " (root: " + w.root + ")" : ""}`);
-        });
-      }
-    }
-
-    loadData();
-  </script>
 </body>
 </html>
