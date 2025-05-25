@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Conlang Dictionary</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    h1, h2 { color: #333; }
+    input, button {
+      padding: 6px;
+      margin: 10px 5px 10px 0;
+      width: 300px;
+      display: inline-block;
+    }
+    button { width: 100px; }
+    .word { margin-left: 10px; }
+    .root { margin-left: 30px; color: #666; }
+    .category { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Conlang Dictionary</h1>
+
+  <input type="text" id="search" placeholder="Search English or Conlang..." />
+  <button onclick="filterWords()">Search</button>
+  <button onclick="viewAll()">View All</button>
+
+  <div id="dictionary"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
