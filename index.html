@@ -4,44 +4,16 @@
   <meta charset="UTF-8" />
   <title>Conlang Dictionary</title>
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-      background: #f0f0f0;
-    }
-    h1, h2 {
-      color: #333;
-    }
-    #search {
-      padding: 8px;
-      width: 300px;
-      margin: 10px 0;
-    }
-    button {
-      padding: 8px;
-      margin-bottom: 10px;
-    }
-    .word {
-      margin-left: 10px;
-    }
-    .root {
-      margin-left: 30px;
-      color: #666;
-    }
-    .category {
-      margin-top: 20px;
-    }
+    body { font-family: sans-serif; padding: 20px; }
+    #dictionary { margin-top: 20px; }
   </style>
 </head>
 <body>
   <h1>Conlang Dictionary</h1>
   <p id="wordCount">Loading...</p>
-
-  <input type="text" id="search" placeholder="Search English or Conlang...">
-  <br>
+  <input id="search" placeholder="Search English or Conlang" />
   <button onclick="filterWords()">Search</button>
   <button onclick="viewAll()">View All</button>
-
   <div id="dictionary"></div>
 
   <script src="script.js"></script>
