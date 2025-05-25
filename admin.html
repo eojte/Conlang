@@ -77,7 +77,7 @@
 <div id="output">Output will appear here...</div>
 
 <script>
-  // Sample dictionary, replace with your data fetching logic
+  // Sample dictionary; replace with your actual data or JSON fetch
   let dictionary = [
     { english: "hello", conlang: "jan", category: "other", root: null },
     { english: "to", conlang: "du", category: "verb", root: null },
@@ -86,37 +86,50 @@
     { english: "water", conlang: "naki", category: "noun", root: null }
   ];
 
+  // Display words grouped by category, roots and their children indented properly
   function displayWords(words) {
-    if (words.length === 0) {
-      return 'No words found.';
-    }
-    // Group by category
-    let grouped = {};
-    words.forEach(word => {
-      if (!grouped[word.category]) grouped[word.category] = [];
-      grouped[word.category].push(word);
+    if (!words.length) return 'No words found.';
+
+    const byCategory = {};
+    words.forEach(w => {
+      if (!byCategory[w.category]) byCategory[w.category] = [];
+      byCategory[w.category].push(w);
     });
 
     let output = '';
-    for (const category in grouped) {
+
+    for (const category in byCategory) {
       output += category.charAt(0).toUpperCase() + category.slice(1) + ':\n';
-      // Find roots with children
-      let roots = grouped[category].filter(w => !w.root);
+
+      const categoryWords = byCategory[category];
+
+      // Map roots to their derived words
+      const roots = categoryWords.filter(w => !w.root);
+      const childrenByRoot = {};
+      categoryWords.forEach(w => {
+        if (w.root) {
+          if (!childrenByRoot[w.root]) childrenByRoot[w.root] = [];
+          childrenByRoot[w.root].push(w);
+        }
+      });
+
+      // Show each root with children indented
       roots.forEach(rootWord => {
         output += `${rootWord.english} - ${rootWord.conlang}\n`;
-        // Find derived words
-        grouped[category].forEach(w => {
-          if (w.root === rootWord.conlang) {
-            output += `   -> ${w.english} - ${w.conlang}\n`;
-          }
-        });
+        if (childrenByRoot[rootWord.conlang]) {
+          childrenByRoot[rootWord.conlang].forEach(child => {
+            output += `   -> ${child.english} - ${child.conlang}\n`;
+          });
+        }
       });
-      // Words that are roots but have no children
-      let children = grouped[category].filter(w => w.root);
-      let orphans = children.filter(cw => !roots.some(r => r.conlang === cw.root));
+
+      // Show derived words that don't have their root in the list (orphans)
+      const rootConlangs = roots.map(r => r.conlang);
+      const orphans = categoryWords.filter(w => w.root && !rootConlangs.includes(w.root));
       orphans.forEach(o => {
         output += `${o.english} - ${o.conlang}\n`;
       });
+
       output += '\n';
     }
     return output;
@@ -135,11 +148,9 @@
       const found = dictionary.filter(w => w.english.toLowerCase().includes(input) || w.conlang.toLowerCase().includes(input));
       result = displayWords(found);
     } else if (action === 'add') {
-      // Simplified add example, you can expand this to include category and root inputs
       if (dictionary.some(w => w.english.toLowerCase() === input || w.conlang.toLowerCase() === input)) {
         result = 'Word already exists.';
       } else {
-        // For demo add with default category "other" and no root
         dictionary.push({ english: input, conlang: input, category: 'other', root: null });
         result = 'Word added.';
       }
@@ -154,7 +165,6 @@
     } else if (action === 'edit') {
       const word = dictionary.find(w => w.english.toLowerCase() === input || w.conlang.toLowerCase() === input);
       if (word) {
-        // For demo, just change category (you can prompt or create inputs for edits)
         word.category = word.category === 'other' ? 'noun' : 'other';
         result = `Word category toggled to ${word.category}.`;
       } else {
