@@ -1,180 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Conlang Admin Panel</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    padding: 15px;
-    max-width: 900px;
-    margin: auto;
-  }
-  h1 {
-    text-align: center;
-  }
-  #controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 10px;
-    justify-content: center;
-  }
-  input[type="text"] {
-    flex: 1 1 200px;
-    padding: 8px;
-    font-size: 1rem;
-  }
-  select, button {
-    padding: 8px 12px;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  #output {
-    border: 1px solid #ccc;
-    padding: 10px;
-    font-size: 0.9rem;
-    height: 350px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    background-color: #f9f9f9;
-  }
-  @media (max-width: 500px) {
-    #controls {
-      flex-direction: column;
-      align-items: stretch;
+  <meta charset="UTF-8" />
+  <title>Conlang Dictionary</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
     }
-    input[type="text"], select, button {
-      width: 100%;
-      font-size: 1.1rem;
+    input, button {
+      font-size: 18px;
+      padding: 8px;
+      margin: 5px 0;
     }
-    #output {
-      height: 300px;
-      font-size: 0.85rem;
+    #dictionary {
+      margin-top: 20px;
+      white-space: pre-wrap;
     }
-  }
-</style>
+  </style>
 </head>
 <body>
+  <h1>Conlang Dictionary</h1>
+  <p id="wordCount">Loading dictionary...</p>
+  <input id="search" placeholder="Search English or Conlang" />
+  <button onclick="filterWords()">Search</button>
+  <button onclick="viewAll()">View All</button>
+  <div id="dictionary"></div>
 
-<h1>Conlang Admin Panel</h1>
-
-<div id="controls">
-  <input id="wordInput" placeholder="Type English or Conlang word" />
-  
-  <select id="actionSelect">
-    <option value="search">Search</option>
-    <option value="add">Add</option>
-    <option value="edit">Edit</option>
-    <option value="delete">Delete</option>
-    <option value="showall">Show All Words</option>
-  </select>
-  
-  <button onclick="handleAction()">Go</button>
-</div>
-
-<div id="output">Output will appear here...</div>
-
-<script>
-  // Sample dictionary; replace with your actual data or JSON fetch
-  let dictionary = [
-    { english: "hello", conlang: "jan", category: "other", root: null },
-    { english: "to", conlang: "du", category: "verb", root: null },
-    { english: "to go", conlang: "duga", category: "verb", root: "du" },
-    { english: "to be", conlang: "duba", category: "verb", root: "du" },
-    { english: "water", conlang: "naki", category: "noun", root: null }
-  ];
-
-  // Display words grouped by category, roots and their children indented properly
-  function displayWords(words) {
-    if (!words.length) return 'No words found.';
-
-    const byCategory = {};
-    words.forEach(w => {
-      if (!byCategory[w.category]) byCategory[w.category] = [];
-      byCategory[w.category].push(w);
-    });
-
-    let output = '';
-
-    for (const category in byCategory) {
-      output += category.charAt(0).toUpperCase() + category.slice(1) + ':\n';
-
-      const categoryWords = byCategory[category];
-
-      // Map roots to their derived words
-      const roots = categoryWords.filter(w => !w.root);
-      const childrenByRoot = {};
-      categoryWords.forEach(w => {
-        if (w.root) {
-          if (!childrenByRoot[w.root]) childrenByRoot[w.root] = [];
-          childrenByRoot[w.root].push(w);
-        }
-      });
-
-      // Show each root with children indented
-      roots.forEach(rootWord => {
-        output += `${rootWord.english} - ${rootWord.conlang}\n`;
-        if (childrenByRoot[rootWord.conlang]) {
-          childrenByRoot[rootWord.conlang].forEach(child => {
-            output += `   -> ${child.english} - ${child.conlang}\n`;
-          });
-        }
-      });
-
-      // Show derived words that don't have their root in the list (orphans)
-      const rootConlangs = roots.map(r => r.conlang);
-      const orphans = categoryWords.filter(w => w.root && !rootConlangs.includes(w.root));
-      orphans.forEach(o => {
-        output += `${o.english} - ${o.conlang}\n`;
-      });
-
-      output += '\n';
-    }
-    return output;
-  }
-
-  function handleAction() {
-    const action = document.getElementById('actionSelect').value;
-    const input = document.getElementById('wordInput').value.trim().toLowerCase();
-    let result = '';
-
-    if (action === 'showall') {
-      result = displayWords(dictionary);
-    } else if (!input) {
-      result = 'Please enter a word.';
-    } else if (action === 'search') {
-      const found = dictionary.filter(w => w.english.toLowerCase().includes(input) || w.conlang.toLowerCase().includes(input));
-      result = displayWords(found);
-    } else if (action === 'add') {
-      if (dictionary.some(w => w.english.toLowerCase() === input || w.conlang.toLowerCase() === input)) {
-        result = 'Word already exists.';
-      } else {
-        dictionary.push({ english: input, conlang: input, category: 'other', root: null });
-        result = 'Word added.';
-      }
-    } else if (action === 'delete') {
-      const index = dictionary.findIndex(w => w.english.toLowerCase() === input || w.conlang.toLowerCase() === input);
-      if (index > -1) {
-        dictionary.splice(index, 1);
-        result = 'Word deleted.';
-      } else {
-        result = 'Word not found.';
-      }
-    } else if (action === 'edit') {
-      const word = dictionary.find(w => w.english.toLowerCase() === input || w.conlang.toLowerCase() === input);
-      if (word) {
-        word.category = word.category === 'other' ? 'noun' : 'other';
-        result = `Word category toggled to ${word.category}.`;
-      } else {
-        result = 'Word not found.';
-      }
-    }
-
-    document.getElementById('output').textContent = result;
-  }
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
