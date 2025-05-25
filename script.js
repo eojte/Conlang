@@ -15,11 +15,15 @@ function viewAll() {
   displayWords(dict);
 }
 
+function normalize(text) {
+  return text.toLowerCase().replace(/[^a-z]/g, "");
+}
+
 function filterWords() {
-  const term = document.getElementById("search").value.trim().toLowerCase();
+  const term = normalize(document.getElementById("search").value.trim());
   const filtered = dict.filter(w =>
-    w.english.toLowerCase().includes(term) ||
-    w.conlang.toLowerCase().includes(term)
+    normalize(w.english).includes(term) ||
+    normalize(w.conlang).includes(term)
   );
   displayWords(filtered);
 }
@@ -47,17 +51,15 @@ function displayWords(words) {
     const group = byCategory[category];
 
     group.forEach(entry => {
-      if (entry.root && shown.has(entry.conlang)) return;
+      if (shown.has(entry.conlang)) return;
 
-      // Show root word first
-      if (!entry.root && !shown.has(entry.conlang)) {
+      if (!entry.root) {
         const line = document.createElement("div");
         line.className = "word";
         line.textContent = `${capitalize(entry.english)} - ${entry.conlang}`;
         catDiv.appendChild(line);
         shown.add(entry.conlang);
 
-        // Show derived words
         const derived = group.filter(w => w.root === entry.conlang);
         derived.forEach(child => {
           const sub = document.createElement("div");
@@ -67,9 +69,11 @@ function displayWords(words) {
           shown.add(child.conlang);
         });
       }
+    });
 
-      // Show standalone words without a root
-      if (!entry.root && !shown.has(entry.conlang)) {
+    // Also show standalone root words not shown yet
+    group.forEach(entry => {
+      if (!shown.has(entry.conlang)) {
         const solo = document.createElement("div");
         solo.className = "word";
         solo.textContent = `${capitalize(entry.english)} - ${entry.conlang}`;
