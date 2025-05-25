@@ -1,87 +1,85 @@
 let dict = [];
 
 fetch('conlang_dict.json')
-  .then(res => {
-    if (!res.ok) throw new Error("Failed to load JSON");
-    return res.json();
-  })
+  .then(res => res.json())
   .then(data => {
-    dict = data.map(entry => ({
-      ...entry,
-      english: entry.english.toLowerCase(),
-      conlang: entry.conlang.toLowerCase(),
-      category: entry.category.toLowerCase(),
-      root: entry.root ? entry.root.toLowerCase() : null
-    }));
-    displayAllWords(dict);
+    dict = data;
+    viewAll();
   })
   .catch(err => {
     document.getElementById("dictionary").innerHTML = `<p style="color:red;">Error loading dictionary: ${err.message}</p>`;
   });
 
-function displayAllWords(data) {
-  document.getElementById("wordCount").textContent = `Total words: ${data.length}`;
-  const output = document.getElementById("dictionary");
-  output.innerHTML = "";
-
-  const grouped = {};
-  data.forEach(entry => {
-    const cat = entry.category;
-    if (!grouped[cat]) grouped[cat] = [];
-    grouped[cat].push(entry);
-  });
-
-  const usedAsChild = new Set(data.filter(w => w.root).map(w => w.root));
-  const shown = new Set(); // To avoid double displaying
-
-  for (let cat in grouped) {
-    const section = document.createElement("div");
-    section.className = "category";
-    section.innerHTML = `<h2>${capitalize(cat)}</h2>`;
-
-    grouped[cat].forEach(word => {
-      const isRoot = usedAsChild.has(word.conlang);
-      const hasParent = word.root !== null;
-
-      if (isRoot && !shown.has(word.conlang)) {
-        const line = document.createElement("div");
-        line.className = "word";
-        line.textContent = `${capitalize(word.english)} - ${word.conlang}`;
-        section.appendChild(line);
-        shown.add(word.conlang);
-
-        const children = data.filter(w => w.root === word.conlang);
-        children.forEach(child => {
-          const rootLine = document.createElement("div");
-          rootLine.className = "root";
-          rootLine.textContent = `→ ${capitalize(child.english)} - ${child.conlang}`;
-          section.appendChild(rootLine);
-          shown.add(child.conlang);
-        });
-      } else if (!hasParent && !shown.has(word.conlang)) {
-        const line = document.createElement("div");
-        line.className = "word";
-        line.textContent = `${capitalize(word.english)} - ${word.conlang}`;
-        section.appendChild(line);
-        shown.add(word.conlang);
-      }
-    });
-
-    output.appendChild(section);
-  }
+function viewAll() {
+  document.getElementById("search").value = "";
+  displayWords(dict);
 }
 
 function filterWords() {
   const term = document.getElementById("search").value.trim().toLowerCase();
   const filtered = dict.filter(w =>
-    w.english.includes(term) || w.conlang.includes(term)
+    w.english.toLowerCase().includes(term) ||
+    w.conlang.toLowerCase().includes(term)
   );
-  displayAllWords(filtered);
+  displayWords(filtered);
 }
 
-function viewAll() {
-  document.getElementById("search").value = "";
-  displayAllWords(dict);
+function displayWords(words) {
+  const output = document.getElementById("dictionary");
+  const wordCount = document.getElementById("wordCount");
+  output.innerHTML = "";
+  wordCount.textContent = `Total words: ${words.length}`;
+
+  const byCategory = {};
+  const shown = new Set();
+
+  words.forEach(entry => {
+    const category = entry.category.toLowerCase();
+    if (!byCategory[category]) byCategory[category] = [];
+    byCategory[category].push(entry);
+  });
+
+  for (const category in byCategory) {
+    const catDiv = document.createElement("div");
+    catDiv.className = "category";
+    catDiv.innerHTML = `<h2>${capitalize(category)}</h2>`;
+
+    const group = byCategory[category];
+
+    group.forEach(entry => {
+      if (entry.root && shown.has(entry.conlang)) return;
+
+      // Show root word first
+      if (!entry.root && !shown.has(entry.conlang)) {
+        const line = document.createElement("div");
+        line.className = "word";
+        line.textContent = `${capitalize(entry.english)} - ${entry.conlang}`;
+        catDiv.appendChild(line);
+        shown.add(entry.conlang);
+
+        // Show derived words
+        const derived = group.filter(w => w.root === entry.conlang);
+        derived.forEach(child => {
+          const sub = document.createElement("div");
+          sub.className = "root";
+          sub.textContent = `→ ${capitalize(child.english)} - ${child.conlang}`;
+          catDiv.appendChild(sub);
+          shown.add(child.conlang);
+        });
+      }
+
+      // Show standalone words without a root
+      if (!entry.root && !shown.has(entry.conlang)) {
+        const solo = document.createElement("div");
+        solo.className = "word";
+        solo.textContent = `${capitalize(entry.english)} - ${entry.conlang}`;
+        catDiv.appendChild(solo);
+        shown.add(entry.conlang);
+      }
+    });
+
+    output.appendChild(catDiv);
+  }
 }
 
 function capitalize(str) {
