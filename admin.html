@@ -5,145 +5,253 @@
   <title>Conlang Admin Panel</title>
   <style>
     body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
-    input, select, button, textarea { margin: 5px 0; width: 100%; padding: 8px; }
-    #dictionary { margin-top: 20px; }
-    .entry { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-    .entry-buttons { display: flex; justify-content: space-between; margin-top: 5px; }
+    input, select, button { display: block; margin: 10px 0; padding: 10px; width: 100%; }
+    textarea { width: 100%; height: 200px; margin-top: 20px; }
   </style>
 </head>
 <body>
   <h1>Conlang Admin Panel</h1>
 
-  <label for="token">GitHub Token:</label>
-  <input type="password" id="token" placeholder="Paste your GitHub token here" />
-
-  <label for="english">English:</label>
-  <input id="english" />
-
-  <label for="conlang">Conlang:</label>
-  <input id="conlang" />
-
-  <label for="category">Category:</label>
+  <input id="english" placeholder="English word" />
+  <input id="conlang" placeholder="Conlang word" />
   <select id="category">
     <option value="noun">Noun</option>
     <option value="verb">Verb</option>
-    <option value="adj">Adjective</option>
+    <option value="adjective">Adjective</option>
     <option value="other">Other</option>
   </select>
+  <input id="root" placeholder="Root word (optional)" />
+  <button onclick="addOrUpdate()">Add / Update</button>
+  <button onclick="saveToGitHub()">Save to GitHub</button>
 
-  <label for="root">Root (optional):</label>
-  <input id="root" />
+  <hr />
 
-  <button onclick="addEntry()">Add / Update</button>
-  <button onclick="saveChanges()">Save to GitHub</button>
+  <input id="searchBox" placeholder="Search English or Conlang..." />
+  <button onclick="searchWord()">Search</button>
 
-  <div id="dictionary"></div>
+  <textarea id="log" readonly></textarea>
 
   <script>
-    const username = "eojte";
-    const repo = "Conlang";
+    const repo = "eojte/Conlang"; // Your public repo
     const filePath = "conlang_dict.json";
+    const token = "YOUR_TOKEN_HERE"; // <-- Insert your token here
+
     let dictionary = [];
     let fileSha = "";
 
-    async function fetchDictionary() {
-      const url = `https://api.github.com/repos/${username}/${repo}/contents/${filePath}`;
-      const res = await fetch(url);
+    async function loadData() {
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`);
       const data = await res.json();
       fileSha = data.sha;
       const content = atob(data.content);
       dictionary = JSON.parse(content);
-      renderDictionary();
+      log(`Loaded ${dictionary.length} words from GitHub.`);
     }
 
-    function renderDictionary() {
-      const container = document.getElementById("dictionary");
-      container.innerHTML = "";
-      dictionary.forEach((word, index) => {
-        const div = document.createElement("div");
-        div.className = "entry";
-        div.innerHTML = `
-          <strong>${word.english}</strong> - <em>${word.conlang}</em><br>
-          Category: ${word.category}<br>
-          Root: ${word.root || "None"}
-          <div class="entry-buttons">
-            <button onclick="editEntry(${index})">Edit</button>
-            <button onclick="deleteEntry(${index})">Delete</button>
-          </div>
-        `;
-        container.appendChild(div);
-      });
+    function log(msg) {
+      document.getElementById("log").value += msg + "\n";
     }
 
-    function addEntry() {
-      const english = document.getElementById("english").value.trim();
-      const conlang = document.getElementById("conlang").value.trim();
+    function addOrUpdate() {
+      const english = document.getElementById("english").value.trim().toLowerCase();
+      const conlang = document.getElementById("conlang").value.trim().toLowerCase();
       const category = document.getElementById("category").value;
-      const root = document.getElementById("root").value.trim() || null;
+      const root = document.getElementById("root").value.trim().toLowerCase() || null;
 
       if (!english || !conlang) {
-        alert("English and Conlang fields are required.");
+        log("Both English and Conlang fields are required.");
         return;
       }
 
-      const index = dictionary.findIndex(w => w.english.toLowerCase() === english.toLowerCase());
-      const newEntry = { english, conlang, category, root };
+      const existing = dictionary.find(w => w.english.toLowerCase() === english || w.conlang.toLowerCase() === conlang);
 
-      if (index >= 0) {
-        dictionary[index] = newEntry;
+      if (existing) {
+        const confirmReplace = confirm(`Word already exists:\nEnglish: ${existing.english}\nConlang: ${existing.conlang}\n\nReplace it?`);
+        if (!confirmReplace) {
+          log("Canceled.");
+          return;
+        }
+        existing.english = english;
+        existing.conlang = conlang;
+        existing.category = category;
+        existing.root = root;
+        log(`Updated: ${english} - ${conlang}`);
       } else {
-        dictionary.push(newEntry);
-      }
-
-      renderDictionary();
-      document.getElementById("english").value = "";
-      document.getElementById("conlang").value = "";
-      document.getElementById("root").value = "";
-    }
-
-    function editEntry(index) {
-      const word = dictionary[index];
-      document.getElementById("english").value = word.english;
-      document.getElementById("conlang").value = word.conlang;
-      document.getElementById("category").value = word.category;
-      document.getElementById("root").value = word.root || "";
-    }
-
-    function deleteEntry(index) {
-      if (confirm("Are you sure you want to delete this word?")) {
-        dictionary.splice(index, 1);
-        renderDictionary();
+        dictionary.push({ english, conlang, category, root });
+        log(`Added: ${english} - ${conlang}`);
       }
     }
 
-    async function saveChanges() {
-      const token = document.getElementById("token").value;
-      if (!token) return alert("Token required!");
-
-      const url = `https://api.github.com/repos/${username}/${repo}/contents/${filePath}`;
-      const updatedContent = btoa(JSON.stringify(dictionary, null, 2));
-      const res = await fetch(url, {
+    async function saveToGitHub() {
+      const content = btoa(JSON.stringify(dictionary, null, 2));
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
         method: "PUT",
         headers: {
-          Authorization: `token ${token}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          Authorization: `token ${token}`
         },
         body: JSON.stringify({
-          message: "Update dictionary from admin panel",
-          content: updatedContent,
+          message: "Update conlang_dict.json via admin panel",
+          content,
           sha: fileSha
         })
       });
 
       if (res.ok) {
-        alert("Dictionary saved!");
-        fetchDictionary(); // Reload to get new SHA
+        const data = await res.json();
+        fileSha = data.content.sha;
+        log("Successfully saved to GitHub.");
       } else {
-        alert("Failed to save. Check token and permissions.");
+        const err = await res.json();
+        log("Error saving: " + (err.message || "Unknown error."));
       }
     }
 
-    fetchDictionary();
+    function searchWord() {
+      const term = document.getElementById("searchBox").value.trim().toLowerCase();
+      const matches = dictionary.filter(w =>
+        w.english.toLowerCase().includes(term) || w.conlang.toLowerCase().includes(term)
+      );
+
+      if (matches.length === 0) {
+        log(`No matches found for "${term}"`);
+      } else {
+        log(`Search results for "${term}":`);
+        matches.forEach(w => {
+          log(`• ${w.english} - ${w.conlang} [${w.category}]${w.root ? " -> root: " + w.root : ""}`);
+        });
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Conlang Admin Panel</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    input, select, button { display: block; margin: 10px 0; padding: 10px; width: 100%; }
+    textarea { width: 100%; height: 200px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Conlang Admin Panel</h1>
+
+  <input id="english" placeholder="English word" />
+  <input id="conlang" placeholder="Conlang word" />
+  <select id="category">
+    <option value="noun">Noun</option>
+    <option value="verb">Verb</option>
+    <option value="adjective">Adjective</option>
+    <option value="other">Other</option>
+  </select>
+  <input id="root" placeholder="Root word (optional)" />
+  <button onclick="addOrUpdate()">Add / Update</button>
+  <button onclick="saveToGitHub()">Save to GitHub</button>
+
+  <hr />
+
+  <input id="searchBox" placeholder="Search English or Conlang..." />
+  <button onclick="searchWord()">Search</button>
+
+  <textarea id="log" readonly></textarea>
+
+  <script>
+    const repo = "eojte/Conlang"; // Your public repo
+    const filePath = "conlang_dict.json";
+    const token = "YOUR_TOKEN_HERE"; // <-- Insert your token here
+
+    let dictionary = [];
+    let fileSha = "";
+
+    async function loadData() {
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`);
+      const data = await res.json();
+      fileSha = data.sha;
+      const content = atob(data.content);
+      dictionary = JSON.parse(content);
+      log(`Loaded ${dictionary.length} words from GitHub.`);
+    }
+
+    function log(msg) {
+      document.getElementById("log").value += msg + "\n";
+    }
+
+    function addOrUpdate() {
+      const english = document.getElementById("english").value.trim().toLowerCase();
+      const conlang = document.getElementById("conlang").value.trim().toLowerCase();
+      const category = document.getElementById("category").value;
+      const root = document.getElementById("root").value.trim().toLowerCase() || null;
+
+      if (!english || !conlang) {
+        log("Both English and Conlang fields are required.");
+        return;
+      }
+
+      const existing = dictionary.find(w => w.english.toLowerCase() === english || w.conlang.toLowerCase() === conlang);
+
+      if (existing) {
+        const confirmReplace = confirm(`Word already exists:\nEnglish: ${existing.english}\nConlang: ${existing.conlang}\n\nReplace it?`);
+        if (!confirmReplace) {
+          log("Canceled.");
+          return;
+        }
+        existing.english = english;
+        existing.conlang = conlang;
+        existing.category = category;
+        existing.root = root;
+        log(`Updated: ${english} - ${conlang}`);
+      } else {
+        dictionary.push({ english, conlang, category, root });
+        log(`Added: ${english} - ${conlang}`);
+      }
+    }
+
+    async function saveToGitHub() {
+      const content = btoa(JSON.stringify(dictionary, null, 2));
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `token ${token}`
+        },
+        body: JSON.stringify({
+          message: "Update conlang_dict.json via admin panel",
+          content,
+          sha: fileSha
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        fileSha = data.content.sha;
+        log("Successfully saved to GitHub.");
+      } else {
+        const err = await res.json();
+        log("Error saving: " + (err.message || "Unknown error."));
+      }
+    }
+
+    function searchWord() {
+      const term = document.getElementById("searchBox").value.trim().toLowerCase();
+      const matches = dictionary.filter(w =>
+        w.english.toLowerCase().includes(term) || w.conlang.toLowerCase().includes(term)
+      );
+
+      if (matches.length === 0) {
+        log(`No matches found for "${term}"`);
+      } else {
+        log(`Search results for "${term}":`);
+        matches.forEach(w => {
+          log(`• ${w.english} - ${w.conlang} [${w.category}]${w.root ? " -> root: " + w.root : ""}`);
+        });
+      }
+    }
+
+    loadData();
   </script>
 </body>
 </html>
