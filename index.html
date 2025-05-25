@@ -7,13 +7,17 @@
   <style>
     body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
     h1, h2 { color: #333; }
-    input, button {
+    input {
       padding: 6px;
-      margin: 10px 5px 10px 0;
+      margin: 10px 0;
       width: 300px;
-      display: inline-block;
+      display: block;
     }
-    button { width: 100px; }
+    button {
+      padding: 6px;
+      margin-right: 10px;
+      width: 100px;
+    }
     .word { margin-left: 10px; }
     .root { margin-left: 30px; color: #666; }
     .category { margin-top: 20px; }
@@ -21,10 +25,13 @@
 </head>
 <body>
   <h1>Conlang Dictionary</h1>
+  <p id="wordCount">Total words: 0</p>
 
   <input type="text" id="search" placeholder="Search English or Conlang..." />
-  <button onclick="filterWords()">Search</button>
-  <button onclick="viewAll()">View All</button>
+  <div>
+    <button onclick="filterWords()">Search</button>
+    <button onclick="viewAll()">View All</button>
+  </div>
 
   <div id="dictionary"></div>
 
