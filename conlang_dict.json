@@ -1,0 +1,506 @@
+[
+  {
+    "english": "hello",
+    "conlang": "jan",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "to",
+    "conlang": "du",
+    "category": "verb",
+    "root": null
+  },
+  {
+    "english": "to be",
+    "conlang": "du'ba",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "to go",
+    "conlang": "du'ga",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "to eat",
+    "conlang": "du'nom",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "to see",
+    "conlang": "du'sa",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "to run",
+    "conlang": "du'lir",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "god",
+    "conlang": "tuk",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "sun god",
+    "conlang": "sol'tuk",
+    "category": "Noun",
+    "root": "tuk"
+  },
+  {
+    "english": "moon god",
+    "conlang": "nol'tuk",
+    "category": "Noun",
+    "root": "tuk"
+  },
+  {
+    "english": "to do",
+    "conlang": "du'dir",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "they",
+    "conlang": "rai",
+    "category": "Pronoun",
+    "root": null
+  },
+  {
+    "english": "them",
+    "conlang": "rui",
+    "category": "Pronoun",
+    "root": "rai"
+  },
+  {
+    "english": "there",
+    "conlang": "rei",
+    "category": "Pronoun",
+    "root": "rai"
+  },
+  {
+    "english": "person",
+    "conlang": "sa'rai",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "water",
+    "conlang": "na'ki",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "food",
+    "conlang": "bo'pa",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "house",
+    "conlang": "hon",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "day",
+    "conlang": "dil",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "night",
+    "conlang": "dul",
+    "category": "Noun",
+    "root": "dil"
+  },
+  {
+    "english": "dawn",
+    "conlang": "dal",
+    "category": "Noun",
+    "root": "dil"
+  },
+  {
+    "english": "dusk",
+    "conlang": "dol",
+    "category": "Noun",
+    "root": "dil"
+  },
+  {
+    "english": "sun",
+    "conlang": "sol",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "moon",
+    "conlang": "nol",
+    "category": "Noun",
+    "root": "sol"
+  },
+  {
+    "english": "fire",
+    "conlang": "sar",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "earth",
+    "conlang": "dak",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "animal",
+    "conlang": "po'lo",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "what",
+    "conlang": "hun",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "who",
+    "conlang": "huk",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "where",
+    "conlang": "hut",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "when",
+    "conlang": "hum",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "why",
+    "conlang": "hup",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "how",
+    "conlang": "hul",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "high",
+    "conlang": "duk",
+    "category": "Adjective",
+    "root": null
+  },
+  {
+    "english": "low",
+    "conlang": "dok",
+    "category": "Adjective",
+    "root": null
+  },
+  {
+    "english": "big",
+    "conlang": "juk",
+    "category": "Adjective",
+    "root": null
+  },
+  {
+    "english": "small",
+    "conlang": "jik",
+    "category": "Adjective",
+    "root": null
+  },
+  {
+    "english": "good",
+    "conlang": "jon",
+    "category": "Adjective",
+    "root": null
+  },
+  {
+    "english": "bad",
+    "conlang": "ron",
+    "category": "Adjective",
+    "root": null
+  },
+  {
+    "english": "hot",
+    "conlang": "bir",
+    "category": "Adjective",
+    "root": null
+  },
+  {
+    "english": "cold",
+    "conlang": "dir",
+    "category": "Adjective",
+    "root": null
+  },
+  {
+    "english": "mountain",
+    "conlang": "hin'da",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "friend",
+    "conlang": "pal'le",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "enemy",
+    "conlang": "na'len",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "to fly",
+    "conlang": "du'fli",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "to write",
+    "conlang": "du'rin",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "to sleep",
+    "conlang": "du'eep",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "to love",
+    "conlang": "du'lup",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "to learn",
+    "conlang": "du'len",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "yes",
+    "conlang": "yai",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "no",
+    "conlang": "noi",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "to talk",
+    "conlang": "du'spe",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "hero",
+    "conlang": "ka'dai",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "job",
+    "conlang": "koin",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "speed",
+    "conlang": "ser",
+    "category": "Adjective",
+    "root": null
+  },
+  {
+    "english": "fast",
+    "conlang": "ser'ka",
+    "category": "Adjective",
+    "root": "ser"
+  },
+  {
+    "english": "slow",
+    "conlang": "ser'da",
+    "category": "Adjective",
+    "root": "ser"
+  },
+  {
+    "english": "color",
+    "conlang": "fol",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "red",
+    "conlang": "fol'ra",
+    "category": "Noun",
+    "root": "fol"
+  },
+  {
+    "english": "orange",
+    "conlang": "fol'ron",
+    "category": "Noun",
+    "root": "fol"
+  },
+  {
+    "english": "yellow",
+    "conlang": "fol,en",
+    "category": "Noun",
+    "root": "fol"
+  },
+  {
+    "english": "dark",
+    "conlang": "don",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "light",
+    "conlang": "lon",
+    "category": "Adjective",
+    "root": null
+  },
+  {
+    "english": "blue",
+    "conlang": "fol'ban",
+    "category": "Adjective",
+    "root": "fol"
+  },
+  {
+    "english": "i",
+    "conlang": "un",
+    "category": "Pronoun",
+    "root": null
+  },
+  {
+    "english": "to cook",
+    "conlang": "du'frun",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "sky",
+    "conlang": "sok",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "plant",
+    "conlang": "poi",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "tree",
+    "conlang": "pol'sok",
+    "category": "Noun",
+    "root": "pol"
+  },
+  {
+    "english": "",
+    "conlang": "",
+    "category": "",
+    "root": null
+  },
+  {
+    "english": "wind",
+    "conlang": "wun",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "to spin",
+    "conlang": "du'sun",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "village",
+    "conlang": "rin",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "true",
+    "conlang": "tra",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "false",
+    "conlang": "fra",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "we",
+    "conlang": "oin",
+    "category": "Pronoun",
+    "root": null
+  },
+  {
+    "english": "nut",
+    "conlang": "bo'kul",
+    "category": "Noun",
+    "root": "bo"
+  },
+  {
+    "english": "to gift",
+    "conlang": "du'joi",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "beer",
+    "conlang": "jur",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "flower",
+    "conlang": "fal'in",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "family",
+    "conlang": "shin",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "farther",
+    "conlang": "shin'da",
+    "category": "Noun",
+    "root": "shin"
+  },
+  {
+    "english": "mother",
+    "conlang": "shin'mar",
+    "category": "Noun",
+    "root": "shin"
+  },
+  {
+    "english": "parent",
+    "conlang": "shin'par",
+    "category": "Noun",
+    "root": "shin"
+  }
+]
