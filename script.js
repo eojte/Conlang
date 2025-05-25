@@ -30,25 +30,38 @@ function displayAllWords(data) {
     grouped[cat].push(entry);
   });
 
+  const usedAsChild = new Set(data.filter(w => w.root).map(w => w.root));
+
   for (let cat in grouped) {
     const section = document.createElement("div");
     section.className = "category";
     section.innerHTML = `<h2>${capitalize(cat)}</h2>`;
 
     grouped[cat].forEach(word => {
-      const line = document.createElement("div");
-      line.className = "word";
-      line.textContent = `${capitalize(word.english)} - ${word.conlang}`;
-      section.appendChild(line);
+      const isRoot = usedAsChild.has(word.conlang);
+      const hasParent = word.root !== null;
 
-      // Show subwords that have this word as root
-      const subwords = dict.filter(w => w.root === word.conlang);
-      subwords.forEach(sub => {
-        const rootLine = document.createElement("div");
-        rootLine.className = "root";
-        rootLine.textContent = `→ ${capitalize(sub.english)} - ${sub.conlang}`;
-        section.appendChild(rootLine);
-      });
+      if (isRoot) {
+        // Show parent and children
+        const line = document.createElement("div");
+        line.className = "word";
+        line.textContent = `${capitalize(word.english)} - ${word.conlang}`;
+        section.appendChild(line);
+
+        const children = data.filter(w => w.root === word.conlang);
+        children.forEach(child => {
+          const rootLine = document.createElement("div");
+          rootLine.className = "root";
+          rootLine.textContent = `→ ${capitalize(child.english)} - ${child.conlang}`;
+          section.appendChild(rootLine);
+        });
+      } else if (!hasParent) {
+        // Show only standalone words
+        const line = document.createElement("div");
+        line.className = "word";
+        line.textContent = `${capitalize(word.english)} - ${word.conlang}`;
+        section.appendChild(line);
+      }
     });
 
     output.appendChild(section);
