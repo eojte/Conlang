@@ -265,7 +265,7 @@
   },
   {
     "english": "to fly",
-    "conlang": "du'fli",
+    "conlang": "du'foin",
     "category": "Verb",
     "root": "du"
   },
@@ -502,5 +502,59 @@
     "conlang": "shin'par",
     "category": "Noun",
     "root": "shin"
+  },
+  {
+    "english": "to share",
+    "conlang": "du'shoi",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "to sex",
+    "conlang": "du'zan",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "body",
+    "conlang": "bun",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "arm",
+    "conlang": "bun'ank",
+    "category": "Noun",
+    "root": "bun"
+  },
+  {
+    "english": "torso",
+    "conlang": "bun'than",
+    "category": "Noun",
+    "root": "bun"
+  },
+  {
+    "english": "want",
+    "conlang": "du'lak",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "book",
+    "conlang": "buk",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "to draw",
+    "conlang": "du'ska",
+    "category": "Verb",
+    "root": "du"
+  },
+  {
+    "english": "manga",
+    "conlang": "buk'ska",
+    "category": "Noun",
+    "root": "buk"
   }
 ]
