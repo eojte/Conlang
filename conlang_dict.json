@@ -7,8 +7,8 @@
   },
   {
     "english": "to",
-    "conlang": "du",
-    "category": "Other",
+    "conlang": "dir",
+    "category": "Suffix",
     "root": null
   },
   {
@@ -253,7 +253,7 @@
   },
   {
     "english": "friend",
-    "conlang": "pal'le",
+    "conlang": "pali",
     "category": "Noun",
     "root": null
   },
@@ -331,15 +331,15 @@
   },
   {
     "english": "fast",
-    "conlang": "ser'ka",
-    "category": "Adjective",
-    "root": "ser"
+    "conlang": "ka",
+    "category": "Suffix",
+    "root": null
   },
   {
     "english": "slow",
-    "conlang": "ser'da",
-    "category": "Adjective",
-    "root": "ser"
+    "conlang": "da",
+    "category": "Suffix",
+    "root": null
   },
   {
     "english": "color",
@@ -349,7 +349,7 @@
   },
   {
     "english": "red",
-    "conlang": "fol'ra",
+    "conlang": "folra",
     "category": "Noun",
     "root": "fol"
   },
@@ -380,7 +380,7 @@
   {
     "english": "blue",
     "conlang": "fol'ban",
-    "category": "Adjective",
+    "category": "Noun",
     "root": "fol"
   },
   {
@@ -403,7 +403,7 @@
   },
   {
     "english": "plant",
-    "conlang": "poi",
+    "conlang": "pol",
     "category": "Noun",
     "root": null
   },
@@ -565,7 +565,7 @@
   },
   {
     "english": "with",
-    "conlang": "kei",
+    "conlang": "ke",
     "category": "Other",
     "root": null
   },
@@ -630,9 +630,21 @@
     "root": "dil"
   },
   {
-    "english": "plant",
-    "conlang": "aka",
+    "english": "green",
+    "conlang": "folbu",
     "category": "Noun",
+    "root": "fol"
+  },
+  {
+    "english": "but",
+    "conlang": "li",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "so",
+    "conlang": "sha",
+    "category": "Other",
     "root": null
   }
 ]
