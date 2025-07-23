@@ -8,38 +8,38 @@
   {
     "english": "to",
     "conlang": "du",
-    "category": "verb",
+    "category": "Other",
     "root": null
   },
   {
-    "english": "to be",
-    "conlang": "du'ba",
+    "english": "be",
+    "conlang": "ba",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
-    "english": "to go",
-    "conlang": "du'ga",
+    "english": "go",
+    "conlang": "ga",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
-    "english": "to eat",
-    "conlang": "du'nom",
+    "english": "eat",
+    "conlang": "noma",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
-    "english": "to see",
-    "conlang": "du'sa",
+    "english": "see",
+    "conlang": "sa",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
-    "english": "to run",
-    "conlang": "du'lir",
+    "english": "run",
+    "conlang": "lir",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
     "english": "god",
@@ -60,10 +60,10 @@
     "root": "tuk"
   },
   {
-    "english": "to do",
-    "conlang": "du'dir",
+    "english": "do",
+    "conlang": "dir",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
     "english": "they",
@@ -264,34 +264,34 @@
     "root": null
   },
   {
-    "english": "to fly",
-    "conlang": "du'foin",
+    "english": "fly",
+    "conlang": "foin",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
-    "english": "to write",
-    "conlang": "du'rin",
+    "english": "write",
+    "conlang": "rina",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
-    "english": "to sleep",
-    "conlang": "du'eep",
+    "english": "sleep",
+    "conlang": "eep",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
-    "english": "to love",
-    "conlang": "du'lup",
+    "english": "love",
+    "conlang": "lup",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
-    "english": "to learn",
-    "conlang": "du'len",
+    "english": "learn",
+    "conlang": "len",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
     "english": "yes",
@@ -306,10 +306,10 @@
     "root": null
   },
   {
-    "english": "to talk",
-    "conlang": "du'spe",
+    "english": "talk",
+    "conlang": "sape",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
     "english": "hero",
@@ -390,10 +390,10 @@
     "root": null
   },
   {
-    "english": "to cook",
-    "conlang": "du'frun",
+    "english": "cook",
+    "conlang": "fru",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
     "english": "sky",
@@ -426,10 +426,10 @@
     "root": null
   },
   {
-    "english": "to spin",
-    "conlang": "du'sun",
+    "english": "spin",
+    "conlang": "suna",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
     "english": "village",
@@ -462,10 +462,10 @@
     "root": "bo"
   },
   {
-    "english": "to gift",
-    "conlang": "du'joi",
-    "category": "Verb",
-    "root": "du"
+    "english": "gift",
+    "conlang": "joi",
+    "category": "Noun",
+    "root": null
   },
   {
     "english": "beer",
@@ -504,16 +504,16 @@
     "root": "shin"
   },
   {
-    "english": "to share",
-    "conlang": "du'shoi",
+    "english": "share",
+    "conlang": "shai",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
-    "english": "to sex",
-    "conlang": "du'zan",
+    "english": "sex",
+    "conlang": "zan",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
     "english": "body",
@@ -535,26 +535,104 @@
   },
   {
     "english": "want",
-    "conlang": "du'lak",
+    "conlang": "lak",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
     "english": "book",
-    "conlang": "buk",
+    "conlang": "buka",
     "category": "Noun",
     "root": null
   },
   {
-    "english": "to draw",
-    "conlang": "du'ska",
+    "english": "draw",
+    "conlang": "ska",
     "category": "Verb",
-    "root": "du"
+    "root": null
   },
   {
     "english": "manga",
-    "conlang": "buk'ska",
+    "conlang": "buka'saka",
     "category": "Noun",
-    "root": "buk"
+    "root": "buka"
+  },
+  {
+    "english": "and",
+    "conlang": "yan",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "with",
+    "conlang": "kei",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "because",
+    "conlang": "pon",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "then",
+    "conlang": "del",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "sad",
+    "conlang": "ronsu",
+    "category": "Adjective",
+    "root": "ron"
+  },
+  {
+    "english": "happy",
+    "conlang": "jonlu",
+    "category": "Adjective",
+    "root": "jon"
+  },
+  {
+    "english": "angry",
+    "conlang": "ronka",
+    "category": "Adjective",
+    "root": "ron"
+  },
+  {
+    "english": "today",
+    "conlang": "dudil",
+    "category": "Noun",
+    "root": "dil"
+  },
+  {
+    "english": "tommorow",
+    "conlang": "dilpak",
+    "category": "Noun",
+    "root": "dil"
+  },
+  {
+    "english": "back",
+    "conlang": "rol",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "forward",
+    "conlang": "pak",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "yesterday",
+    "conlang": "dilrol",
+    "category": "Noun",
+    "root": "dil"
+  },
+  {
+    "english": "plant",
+    "conlang": "aka",
+    "category": "Noun",
+    "root": null
   }
 ]
