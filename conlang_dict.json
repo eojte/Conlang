@@ -1,6 +1,6 @@
 [
   {
-    "english": "hello, Hi",
+    "english": "hello",
     "conlang": "jan",
     "category": "Other",
     "root": null
@@ -9,12 +9,6 @@
     "english": "to",
     "conlang": "dir",
     "category": "Suffix",
-    "root": null
-  },
-  {
-    "english": "be",
-    "conlang": "ba",
-    "category": "Verb",
     "root": null
   },
   {
@@ -644,6 +638,36 @@
   {
     "english": "so",
     "conlang": "sha",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "you",
+    "conlang": "ku",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "went",
+    "conlang": "ga",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "are",
+    "conlang": "ba",
+    "category": "Other",
+    "root": null
+  },
+  {
+    "english": "more/s",
+    "conlang": "ne",
+    "category": "Suffix",
+    "root": null
+  },
+  {
+    "english": "was",
+    "conlang": "ta",
     "category": "Other",
     "root": null
   }
