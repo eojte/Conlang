@@ -670,5 +670,23 @@
     "conlang": "ta",
     "category": "Other",
     "root": null
+  },
+  {
+    "english": "money",
+    "conlang": "jin",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "mind",
+    "conlang": "lan",
+    "category": "Noun",
+    "root": null
+  },
+  {
+    "english": "never",
+    "conlang": "frane",
+    "category": "Other",
+    "root": "fra"
   }
 ]
