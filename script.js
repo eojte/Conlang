@@ -58,7 +58,7 @@ function displayWords(words) {
 
       if (!entry.root) {
         const line = document.createElement("div");
-        line.textContent = `${capitalize(entry.english)} - ${entry.conlang}`;
+        line.textContent = `${capitalize(entry.conlang)} - ${entry.english}`;
         line.style.marginLeft = "10px";
         catDiv.appendChild(line);
         shown.add(entry.conlang);
@@ -66,7 +66,7 @@ function displayWords(words) {
         const derived = group.filter(w => w.root === entry.conlang);
         derived.forEach(child => {
           const sub = document.createElement("div");
-          sub.textContent = `→ ${capitalize(child.english)} - ${child.conlang}`;
+          sub.textContent = `→ ${capitalize(child.conlang)} - ${child.english}`;
           sub.className = "root";
           catDiv.appendChild(sub);
           shown.add(child.conlang);
@@ -78,7 +78,7 @@ function displayWords(words) {
     group.forEach(entry => {
       if (!shown.has(entry.conlang)) {
         const solo = document.createElement("div");
-        solo.textContent = `${capitalize(entry.english)} - ${entry.conlang}`;
+        solo.textContent = `${capitalize(entry.conlang)} - ${entry.english}`;
         solo.style.marginLeft = "10px";
         catDiv.appendChild(solo);
         shown.add(entry.conlang);
