@@ -43,14 +43,14 @@ function displayWords(words) {
   const shown = new Set();
 
   words.forEach(entry => {
-    const cat = entry.category.toLowerCase();
+    const cat = entry.category?.toLowerCase() || "uncategorized";
     if (!byCategory[cat]) byCategory[cat] = [];
     byCategory[cat].push(entry);
   });
 
   for (const cat in byCategory) {
     const catDiv = document.createElement("div");
-    catDiv.innerHTML = `<h2>${cat.charAt(0).toUpperCase() + cat.slice(1)}</h2>`;
+    catDiv.innerHTML = `<h2>${capitalize(cat)}</h2>`;
     const group = byCategory[cat];
 
     group.forEach(entry => {
@@ -58,7 +58,7 @@ function displayWords(words) {
 
       if (!entry.root) {
         const line = document.createElement("div");
-        line.textContent = `${capitalize(entry.conlang)} - ${entry.english}`;
+        line.textContent = `${capitalize(entry.english)} — ${capitalize(entry.conlang)}`;
         line.style.marginLeft = "10px";
         catDiv.appendChild(line);
         shown.add(entry.conlang);
@@ -66,19 +66,19 @@ function displayWords(words) {
         const derived = group.filter(w => w.root === entry.conlang);
         derived.forEach(child => {
           const sub = document.createElement("div");
-          sub.textContent = `→ ${capitalize(child.conlang)} - ${child.english}`;
+          sub.textContent = `→ ${capitalize(child.english)} — ${capitalize(child.conlang)}`;
           sub.className = "root";
+          sub.style.marginLeft = "30px";
           catDiv.appendChild(sub);
           shown.add(child.conlang);
         });
       }
     });
 
-    // Show any left-over words (with roots that may be missing base)
     group.forEach(entry => {
       if (!shown.has(entry.conlang)) {
         const solo = document.createElement("div");
-        solo.textContent = `${capitalize(entry.conlang)} - ${entry.english}`;
+        solo.textContent = `${capitalize(entry.english)} — ${capitalize(entry.conlang)}`;
         solo.style.marginLeft = "10px";
         catDiv.appendChild(solo);
         shown.add(entry.conlang);
